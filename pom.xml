@@ -77,9 +77,13 @@
 
         <!-- Lombok -->
         <dependency>
+<!--            <groupId>org.projectlombok</groupId>-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--            <version>1.18.30</version>-->
+<!--            <scope>provided</scope>-->
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
