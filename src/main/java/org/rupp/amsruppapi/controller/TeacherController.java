@@ -175,7 +175,7 @@ public class TeacherController {
                 .build();
         return ResponseEntity.status(CREATED).body(response);
     }
-
+    //Update teacher by Id
     @Operation(summary = "Update teacher by ID", description = "Update teacher by ID. Accessible by admin only")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Teacher>> updateTeacher(
