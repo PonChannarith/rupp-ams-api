@@ -25,19 +25,29 @@ public class AppUserServiceImpl implements AppUserService {
         return appUserRepository.getUserByEmail(email);
     }
 
+//    @Override
+//    public AppUserResponse register(AppUserRequest request) {
+//        request.setPassword(passwordEncoder.encode(request.getPassword()));
+//        AppUser appUser = appUserRepository.register(request);
+//        for (String role : request.getRoles()){
+//            if (role.equals("ROLE_USER")){
+//                appUserRepository.insertUserIdAndRoleId(1L, appUser.getUserId());
+//            }
+//            if (role.equals("ROLE_ADMIN")){
+//                appUserRepository.insertUserIdAndRoleId(2L, appUser.getUserId());
+//            }
+//        }
+//        return modelMapper.map(appUserRepository.getUserById(appUser.getUserId()), AppUserResponse.class);
+//    }
+
     @Override
-    public AppUserResponse register(AppUserRequest request) {
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
-        AppUser appUser = appUserRepository.register(request);
-        for (String role : request.getRoles()){
-            if (role.equals("ROLE_USER")){
-                appUserRepository.insertUserIdAndRoleId(1L, appUser.getUserId());
-            }
-            if (role.equals("ROLE_ADMIN")){
-                appUserRepository.insertUserIdAndRoleId(2L, appUser.getUserId());
-            }
+    public AppUser getUserByEmail(String email) {
+        AppUser user = appUserRepository.getUserByEmail(email); // or findByEmail(email)
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
         }
-        return modelMapper.map(appUserRepository.getUserById(appUser.getUserId()), AppUserResponse.class);
+        return user;
     }
+
 
 }
