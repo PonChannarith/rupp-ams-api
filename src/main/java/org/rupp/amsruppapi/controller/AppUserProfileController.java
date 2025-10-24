@@ -18,7 +18,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("/api/v1/user_profiles")
+@RequestMapping("/api/v1/user-profiles")
 @SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class AppUserProfileController {

@@ -5,12 +5,16 @@ on:
     branches:
       - main
       - develop
-      - deploy  # Add any other branches you want alerts for
+      - deploy
+      - features
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Send Telegram commit alert
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -26,27 +30,15 @@ jobs:
 
           # Build the Telegram message
           MESSAGE="🚀 New Commit Alert by *${GITHUB_ACTOR}* 🚀
-
-📄 Commit Message:
-  $(git log -1 --pretty=format:'%s' $COMMIT_SHA)
-
-🌿 Branch:
-  ${GITHUB_REF_NAME}
-
-📂 Repository:
-  ${GITHUB_REPOSITORY}
-
-🔗 View Commit:
-  [Click here to see the changes](${COMMIT_URL})
-
-🕒 Timestamp:
-  $(git log -1 --pretty=format:'%cI' $COMMIT_SHA)
-
-📝 Commit Details:
-  ${COMMIT_DETAILS}"
+📄 Commit Message: $(git log -1 --pretty=format:'%s' $COMMIT_SHA)
+🌿 Branch: ${GITHUB_REF_NAME}
+📂 Repository: ${GITHUB_REPOSITORY}
+🔗 View Commit: [Click here to see the changes](${COMMIT_URL})
+🕒 Timestamp: $(git log -1 --pretty=format:'%cI' $COMMIT_SHA)
+📝 Commit Details: ${COMMIT_DETAILS}"
   
   # Send the message to Telegram
   curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
-  -d chat_id=${TELEGRAM_CHAT_ID} \
-  -d parse_mode=Markdown \
+  -d chat_id="${TELEGRAM_CHAT_ID}" \
+  -d parse_mode="Markdown" \
   -d text="$MESSAGE"

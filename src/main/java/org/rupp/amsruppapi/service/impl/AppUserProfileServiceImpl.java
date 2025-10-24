@@ -46,13 +46,9 @@ public class AppUserProfileServiceImpl implements AppUserProfileService {
         }
 
         // Check if profile already exists for this user
-        try {
-            AppUserProfile existing = appUserProfileRepository.findByAppUserId(appUserProfile.getAppUserId());
-            if (existing != null) {
-                throw new RuntimeException("User profile already exists for user ID: " + appUserProfile.getAppUserId());
-            }
-        } catch (Exception e) {
-            // Profile doesn't exist, continue
+        if (appUserProfile.getAppUserId() != null &&
+                appUserProfileRepository.countByAppUserId(appUserProfile.getAppUserId()) > 0) {
+            throw new RuntimeException("User profile already exists for user ID: " + appUserProfile.getAppUserId());
         }
 
         appUserProfileRepository.insert(appUserProfile);
@@ -74,16 +70,25 @@ public class AppUserProfileServiceImpl implements AppUserProfileService {
             throw new RuntimeException("Card ID already exists: " + appUserProfile.getCardId());
         }
 
+        // Check if user ID is being changed and if it already exists
+        if (appUserProfile.getAppUserId() != null &&
+                !appUserProfile.getAppUserId().equals(existing.getAppUserId()) &&
+                appUserProfileRepository.countByAppUserIdExcludingId(appUserProfile.getAppUserId(), id) > 0) {
+            throw new RuntimeException("User profile already exists for user ID: " + appUserProfile.getAppUserId());
+        }
+
         // Update fields
         existing.setFirstName(appUserProfile.getFirstName());
         existing.setLastName(appUserProfile.getLastName());
         existing.setDateOfBirth(appUserProfile.getDateOfBirth());
         existing.setPlaceOfBirth(appUserProfile.getPlaceOfBirth());
         existing.setCurrentAddress(appUserProfile.getCurrentAddress());
+//        existing.setProfilePicture(appUserProfile.getProfilePicture());
         existing.setPhoneNumber(appUserProfile.getPhoneNumber());
         existing.setGender(appUserProfile.getGender());
         existing.setCardId(appUserProfile.getCardId());
         existing.setNationality(appUserProfile.getNationality());
+        existing.setAppUserId(appUserProfile.getAppUserId());
 
         int rows = appUserProfileRepository.update(existing);
         if (rows == 0) {

@@ -7,8 +7,8 @@ WHERE user_id = 1;
 -- Sample data for app_user_profile
 INSERT INTO app_user_profile (first_name, last_name, date_of_birth, place_of_birth, current_address, phone_number, gender, card_id, nationality, app_user_id)
 VALUES
-    ('John', 'Doe', '1990-05-15', 'New York', '123 Main St, New York, NY', '+1234567890', 'Male', 'ID123456', 'American', 9),
-    ('Jane', 'Smith', '1985-08-20', 'Los Angeles', '456 Oak Ave, Los Angeles, CA', '+1987654321', 'Female', 'ID654321', 'American', 10);
+    ('John', 'Doe', '1990-05-15', 'New York', '123 Main St, New York, NY', '+1234567890', 'Male', 'ID123456', 'American', 6),
+    ('Jane', 'Smith', '1985-08-20', 'Los Angeles', '456 Oak Ave, Los Angeles, CA', '+1987654321', 'Female', 'ID654321', 'American', 7);
 
 -- Insert sample subjects
 INSERT INTO subjects (subject_name, subject_description, group_level)

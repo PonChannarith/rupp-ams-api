@@ -1,12 +1,14 @@
 package org.rupp.amsruppapi.repository;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.LocalDateTimeTypeHandler;
 import org.rupp.amsruppapi.model.entity.AppUserProfile;
 
 import java.util.List;
 
 @Mapper
 public interface AppUserProfileRepository {
+
     @Results({
             @Result(property = "appUserProfileId", column = "app_user_profile_id"),
             @Result(property = "firstName", column = "first_name"),
@@ -14,11 +16,14 @@ public interface AppUserProfileRepository {
             @Result(property = "dateOfBirth", column = "date_of_birth"),
             @Result(property = "placeOfBirth", column = "place_of_birth"),
             @Result(property = "currentAddress", column = "current_address"),
+//            @Result(property = "profilePicture", column = "profile_picture"),
             @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "gender", column = "gender"),
             @Result(property = "cardId", column = "card_id"),
+            @Result(property = "nationality", column = "nationality"),
             @Result(property = "appUserId", column = "app_user_id"),
-            @Result(property = "createdAt", column = "created_at"),
-            @Result(property = "updatedAt", column = "updated_at")
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM app_user_profile ORDER BY app_user_profile_id ASC")
     List<AppUserProfile> findAll();
@@ -30,11 +35,14 @@ public interface AppUserProfileRepository {
             @Result(property = "dateOfBirth", column = "date_of_birth"),
             @Result(property = "placeOfBirth", column = "place_of_birth"),
             @Result(property = "currentAddress", column = "current_address"),
+//            @Result(property = "profilePicture", column = "profile_picture"),
             @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "gender", column = "gender"),
             @Result(property = "cardId", column = "card_id"),
+            @Result(property = "nationality", column = "nationality"),
             @Result(property = "appUserId", column = "app_user_id"),
-            @Result(property = "createdAt", column = "created_at"),
-            @Result(property = "updatedAt", column = "updated_at")
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM app_user_profile WHERE app_user_profile_id = #{id}")
     AppUserProfile findById(@Param("id") Long id);
@@ -46,9 +54,14 @@ public interface AppUserProfileRepository {
             @Result(property = "dateOfBirth", column = "date_of_birth"),
             @Result(property = "placeOfBirth", column = "place_of_birth"),
             @Result(property = "currentAddress", column = "current_address"),
+//            @Result(property = "profilePicture", column = "profile_picture"),
             @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "gender", column = "gender"),
             @Result(property = "cardId", column = "card_id"),
-            @Result(property = "appUserId", column = "app_user_id")
+            @Result(property = "nationality", column = "nationality"),
+            @Result(property = "appUserId", column = "app_user_id"),
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM app_user_profile WHERE app_user_id = #{appUserId}")
     AppUserProfile findByAppUserId(@Param("appUserId") Long appUserId);
@@ -64,6 +77,7 @@ public interface AppUserProfileRepository {
             "date_of_birth = #{dateOfBirth}, " +
             "place_of_birth = #{placeOfBirth}, " +
             "current_address = #{currentAddress}, " +
+//            "profile_picture = #{profilePicture}, " +
             "phone_number = #{phoneNumber}, " +
             "gender = #{gender}, " +
             "card_id = #{cardId}, " +
@@ -80,4 +94,10 @@ public interface AppUserProfileRepository {
 
     @Select("SELECT COUNT(*) FROM app_user_profile WHERE card_id = #{cardId}")
     int countByCardId(@Param("cardId") String cardId);
+
+    @Select("SELECT COUNT(*) FROM app_user_profile WHERE app_user_id = #{appUserId} AND app_user_profile_id != #{excludeId}")
+    int countByAppUserIdExcludingId(@Param("appUserId") Long appUserId, @Param("excludeId") Long excludeId);
+
+    @Select("SELECT COUNT(*) FROM app_user_profile WHERE app_user_id = #{appUserId}")
+    int countByAppUserId(@Param("appUserId") Long appUserId);
 }
