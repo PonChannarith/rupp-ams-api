@@ -46,7 +46,7 @@ public class SubjectServiceImpl implements SubjectService {
         // Check if subject name already exists
         if (subject.getSubjectName() != null &&
                 subjectRepository.countBySubjectName(subject.getSubjectName()) > 0) {
-            throw new RuntimeException("Subject name already exists: " + subject.getSubjectName());
+            throw new IllegalArgumentException("Subject name already exists: " + subject.getSubjectName());
         }
 
         subjectRepository.insert(subject);

@@ -1,19 +1,21 @@
 package org.rupp.amsruppapi.repository;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.LocalDateTimeTypeHandler;
 import org.rupp.amsruppapi.model.entity.Subject;
 
 import java.util.List;
 
 @Mapper
 public interface SubjectRepository {
+
     @Results({
             @Result(property = "subjectId", column = "subject_id"),
             @Result(property = "subjectName", column = "subject_name"),
             @Result(property = "subjectDescription", column = "subject_description"),
             @Result(property = "groupLevel", column = "group_level"),
-            @Result(property = "createdAt", column = "created_at"),
-            @Result(property = "updatedAt", column = "updated_at")
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM subjects ORDER BY subject_id ASC")
     List<Subject> findAll();
@@ -23,8 +25,8 @@ public interface SubjectRepository {
             @Result(property = "subjectName", column = "subject_name"),
             @Result(property = "subjectDescription", column = "subject_description"),
             @Result(property = "groupLevel", column = "group_level"),
-            @Result(property = "createdAt", column = "created_at"),
-            @Result(property = "updatedAt", column = "updated_at")
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM subjects WHERE subject_id = #{id}")
     Subject findById(@Param("id") Long id);
@@ -33,7 +35,9 @@ public interface SubjectRepository {
             @Result(property = "subjectId", column = "subject_id"),
             @Result(property = "subjectName", column = "subject_name"),
             @Result(property = "subjectDescription", column = "subject_description"),
-            @Result(property = "groupLevel", column = "group_level")
+            @Result(property = "groupLevel", column = "group_level"),
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class), // Added
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)  // Added
     })
     @Select("SELECT * FROM subjects WHERE subject_name = #{subjectName}")
     Subject findBySubjectName(@Param("subjectName") String subjectName);
@@ -42,13 +46,15 @@ public interface SubjectRepository {
             @Result(property = "subjectId", column = "subject_id"),
             @Result(property = "subjectName", column = "subject_name"),
             @Result(property = "subjectDescription", column = "subject_description"),
-            @Result(property = "groupLevel", column = "group_level")
+            @Result(property = "groupLevel", column = "group_level"),
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class), // Added
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)  // Added
     })
     @Select("SELECT * FROM subjects WHERE group_level = #{groupLevel}")
     List<Subject> findByGroupLevel(@Param("groupLevel") String groupLevel);
 
-    @Insert("INSERT INTO subjects (subject_name, subject_description, group_level) " +
-            "VALUES (#{subjectName}, #{subjectDescription}, #{groupLevel})")
+    @Insert("INSERT INTO subjects (subject_name, subject_description, group_level, created_at, updated_at) " +
+            "VALUES (#{subjectName}, #{subjectDescription}, #{groupLevel}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
     @Options(useGeneratedKeys = true, keyProperty = "subjectId")
     int insert(Subject subject);
 

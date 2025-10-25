@@ -9,7 +9,7 @@ import org.rupp.amsruppapi.service.SubjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,181 +25,174 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class SubjectController {
     private final SubjectService subjectService;
 
-    private boolean isAdmin() {
+    //  Check if user has any of the specified roles
+    private boolean hasAnyRole(String... roles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null &&
-                authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        if (authentication == null) return false;
+
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> List.of(roles).contains(role));
     }
 
-    private boolean isUserOrAdmin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null &&
-                (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ||
-                        authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
+    private boolean hasRole(String role) {
+        return hasAnyRole(role);
     }
 
-    @Operation(summary = "Get all subjects", description = "Retrieve a list of all subjects")
+    //  1. GET ALL SUBJECTS - All roles can read
+    @Operation(summary = "Get all subjects", description = "Retrieve a list of all subjects (All roles can access)")
     @GetMapping
     public ResponseEntity<ApiResponse<List<Subject>>> getAllSubjects() {
-        if (!isUserOrAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(ApiResponse.<List<Subject>>builder()
-                            .success(false)
-                            .message("Access denied")
-                            .payload(null)
-                            .localDateTime(LocalDateTime.now())
-                            .build());
+        if (!hasAnyRole("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT")) {
+            ApiResponse<List<Subject>> response = new ApiResponse<>();
+            response.setSuccess(false);
+            response.setMessage("Access denied: No valid role");
+            response.setPayload(null);
+            response.setLocalDateTime(LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         List<Subject> subjects = subjectService.findAll();
-        ApiResponse<List<Subject>> response = ApiResponse.<List<Subject>>builder()
-                .success(true)
-                .message("Subjects retrieved successfully")
-                .payload(subjects)
-                .localDateTime(LocalDateTime.now())
-                .build();
+        ApiResponse<List<Subject>> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setMessage("Subjects retrieved successfully");
+        response.setPayload(subjects);
+        response.setLocalDateTime(LocalDateTime.now());
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Get subject by ID", description = "Retrieve a single subject by its ID")
+    //  2. GET SUBJECT BY ID - All roles can read
+    @Operation(summary = "Get subject by ID", description = "Retrieve a single subject by its ID (All roles can access)")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Subject>> getSubjectById(@PathVariable Long id) {
-        if (!isUserOrAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(ApiResponse.<Subject>builder()
-                            .success(false)
-                            .message("Access denied")
-                            .payload(null)
-                            .localDateTime(LocalDateTime.now())
-                            .build());
+        if (!hasAnyRole("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT")) {
+            ApiResponse<Subject> response = new ApiResponse<>();
+            response.setSuccess(false);
+            response.setMessage("Access denied: No valid role");
+            response.setPayload(null);
+            response.setLocalDateTime(LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         Subject subject = subjectService.findById(id);
-        ApiResponse<Subject> response = ApiResponse.<Subject>builder()
-                .success(true)
-                .message("Subject retrieved successfully")
-                .payload(subject)
-                .localDateTime(LocalDateTime.now())
-                .build();
+        ApiResponse<Subject> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setMessage("Subject retrieved successfully");
+        response.setPayload(subject);
+        response.setLocalDateTime(LocalDateTime.now());
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Get subject by name", description = "Retrieve a subject by its name")
+    //  3. GET SUBJECT BY NAME - All roles can read
+    @Operation(summary = "Get subject by name", description = "Retrieve a subject by its name (All roles can access)")
     @GetMapping("/name/{subjectName}")
     public ResponseEntity<ApiResponse<Subject>> getSubjectByName(@PathVariable String subjectName) {
-        if (!isUserOrAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(ApiResponse.<Subject>builder()
-                            .success(false)
-                            .message("Access denied")
-                            .payload(null)
-                            .localDateTime(LocalDateTime.now())
-                            .build());
+        if (!hasAnyRole("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT")) {
+            ApiResponse<Subject> response = new ApiResponse<>();
+            response.setSuccess(false);
+            response.setMessage("Access denied: No valid role");
+            response.setPayload(null);
+            response.setLocalDateTime(LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         Subject subject = subjectService.findBySubjectName(subjectName);
-        ApiResponse<Subject> response = ApiResponse.<Subject>builder()
-                .success(true)
-                .message("Subject retrieved successfully")
-                .payload(subject)
-                .localDateTime(LocalDateTime.now())
-                .build();
+        ApiResponse<Subject> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setMessage("Subject retrieved successfully");
+        response.setPayload(subject);
+        response.setLocalDateTime(LocalDateTime.now());
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Get subjects by group level", description = "Retrieve subjects by group level")
+    //  4. GET SUBJECTS BY GROUP LEVEL - All roles can read
+    @Operation(summary = "Get subjects by group level", description = "Retrieve subjects by group level (All roles can access)")
     @GetMapping("/group/{groupLevel}")
     public ResponseEntity<ApiResponse<List<Subject>>> getSubjectsByGroupLevel(@PathVariable String groupLevel) {
-        if (!isUserOrAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(ApiResponse.<List<Subject>>builder()
-                            .success(false)
-                            .message("Access denied")
-                            .payload(null)
-                            .localDateTime(LocalDateTime.now())
-                            .build());
+        if (!hasAnyRole("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT")) {
+            ApiResponse<List<Subject>> response = new ApiResponse<>();
+            response.setSuccess(false);
+            response.setMessage("Access denied: No valid role");
+            response.setPayload(null);
+            response.setLocalDateTime(LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         List<Subject> subjects = subjectService.findByGroupLevel(groupLevel);
-        ApiResponse<List<Subject>> response = ApiResponse.<List<Subject>>builder()
-                .success(true)
-                .message("Subjects retrieved successfully")
-                .payload(subjects)
-                .localDateTime(LocalDateTime.now())
-                .build();
+        ApiResponse<List<Subject>> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setMessage("Subjects retrieved successfully");
+        response.setPayload(subjects);
+        response.setLocalDateTime(LocalDateTime.now());
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Create a new subject", description = "Create a new subject. Accessible by admin only")
+    //  5. CREATE SUBJECT - Admin only
+    @Operation(summary = "Create a new subject", description = "Create a new subject (Admin only)")
     @PostMapping
     public ResponseEntity<ApiResponse<Subject>> createSubject(@RequestBody Subject subject) {
-        if (!isAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(ApiResponse.<Subject>builder()
-                            .success(false)
-                            .message("Access denied: Admin role required")
-                            .payload(null)
-                            .localDateTime(LocalDateTime.now())
-                            .build());
+        if (!hasRole("ROLE_ADMIN")) {
+            ApiResponse<Subject> response = new ApiResponse<>();
+            response.setSuccess(false);
+            response.setMessage("Access denied: Admin role required");
+            response.setPayload(null);
+            response.setLocalDateTime(LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         Subject created = subjectService.create(subject);
-        ApiResponse<Subject> response = ApiResponse.<Subject>builder()
-                .success(true)
-                .message("Subject created successfully")
-                .payload(created)
-                .localDateTime(LocalDateTime.now())
-                .build();
+        ApiResponse<Subject> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setMessage("Subject created successfully");
+        response.setPayload(created);
+        response.setLocalDateTime(LocalDateTime.now());
         return ResponseEntity.status(CREATED).body(response);
     }
 
-    @Operation(summary = "Update subject by ID", description = "Update subject by ID. Accessible by admin only")
+    //  6. UPDATE SUBJECT - Admin only
+    @Operation(summary = "Update subject by ID", description = "Update subject by ID (Admin only)")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Subject>> updateSubject(
             @PathVariable Long id,
             @RequestBody Subject subject) {
 
-        if (!isAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(ApiResponse.<Subject>builder()
-                            .success(false)
-                            .message("Access denied: Admin role required")
-                            .payload(null)
-                            .localDateTime(LocalDateTime.now())
-                            .build());
+        if (!hasRole("ROLE_ADMIN")) {
+            ApiResponse<Subject> response = new ApiResponse<>();
+            response.setSuccess(false);
+            response.setMessage("Access denied: Admin role required");
+            response.setPayload(null);
+            response.setLocalDateTime(LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         Subject updatedSubject = subjectService.update(id, subject);
-        ApiResponse<Subject> response = ApiResponse.<Subject>builder()
-                .success(true)
-                .message("Subject updated successfully")
-                .payload(updatedSubject)
-                .localDateTime(LocalDateTime.now())
-                .build();
+        ApiResponse<Subject> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setMessage("Subject updated successfully");
+        response.setPayload(updatedSubject);
+        response.setLocalDateTime(LocalDateTime.now());
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Delete subject by ID", description = "Delete subject by ID. Accessible by admin only")
+    //  7. DELETE SUBJECT - Admin only
+    @Operation(summary = "Delete subject by ID", description = "Delete subject by ID (Admin only)")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteSubject(@PathVariable Long id) {
-        if (!isAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(ApiResponse.<Void>builder()
-                            .success(false)
-                            .message("Access denied: Admin role required")
-                            .payload(null)
-                            .localDateTime(LocalDateTime.now())
-                            .build());
+        if (!hasRole("ROLE_ADMIN")) {
+            ApiResponse<Void> response = new ApiResponse<>();
+            response.setSuccess(false);
+            response.setMessage("Access denied: Admin role required");
+            response.setPayload(null);
+            response.setLocalDateTime(LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         subjectService.deleteById(id);
-        ApiResponse<Void> response = ApiResponse.<Void>builder()
-                .success(true)
-                .message("Subject deleted successfully")
-                .payload(null)
-                .localDateTime(LocalDateTime.now())
-                .build();
-
+        ApiResponse<Void> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setMessage("Subject deleted successfully");
+        response.setPayload(null);
+        response.setLocalDateTime(LocalDateTime.now());
         return ResponseEntity.ok(response);
     }
 }
