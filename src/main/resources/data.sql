@@ -25,3 +25,12 @@ INSERT INTO teachers (employee_code, hire_date, status, user_id)
 VALUES
     ('Teacher Reaksmey', '2020-01-15', 'active', 7),
     ('Teacher Samnang', '2021-06-10', 'active', 11);
+
+
+-- Insert sample data
+INSERT INTO classes (class_name, grade_level, academic_year) VALUES
+                                                                 ('A1', 'Java', '2025-2026'),
+                                                                 ('A2', 'Python', '2025-2026'),
+                                                                 ('A5', 'MIS', '2025-2026'),
+                                                                 ('E4', 'C Programming', '2025-2026'),
+                                                                 ('E3', 'Software Engineering', '2025-2026');

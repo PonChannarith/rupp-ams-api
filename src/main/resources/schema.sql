@@ -59,3 +59,13 @@ CREATE TABLE IF NOT EXISTS teachers (
                                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Classes Table
+CREATE TABLE IF NOT EXISTS classes (
+                                       class_id SERIAL PRIMARY KEY,
+                                       class_name VARCHAR(200) NOT NULL,
+                                       grade_level VARCHAR(50) NOT NULL,
+                                       academic_year VARCHAR(20) NOT NULL,
+                                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                       last_modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
