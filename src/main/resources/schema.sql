@@ -69,3 +69,18 @@ CREATE TABLE IF NOT EXISTS classes (
                                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                        last_modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Students Table
+CREATE TABLE IF NOT EXISTS students (
+                                        student_id SERIAL PRIMARY KEY,
+                                        student_no VARCHAR(50) UNIQUE NOT NULL,
+                                        student_card_id VARCHAR(100) UNIQUE NOT NULL,
+                                        khmer_name VARCHAR(200) NOT NULL,
+                                        english_name VARCHAR(200),
+                                        gender VARCHAR(10) CHECK (gender IN ('Male', 'Female', 'Other')),
+                                        phone_number VARCHAR(20),
+                                        date_of_birth DATE,
+                                        user_id INTEGER NOT NULL REFERENCES app_users(user_id) ON DELETE CASCADE,
+                                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
