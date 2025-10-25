@@ -1,6 +1,7 @@
 package org.rupp.amsruppapi.repository;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.LocalDateTimeTypeHandler;
 import org.rupp.amsruppapi.model.entity.Teacher;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public interface TeacherRepository {
             @Result(property = "employeeCode", column = "employee_code"),
             @Result(property = "hireDate", column = "hire_date"),
             @Result(property = "userId", column = "user_id"),
-            @Result(property = "createdAt", column = "created_at"),
-            @Result(property = "updatedAt", column = "updated_at")
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM teachers ORDER BY teacher_id ASC")
     List<Teacher> findAll();
@@ -23,8 +24,8 @@ public interface TeacherRepository {
             @Result(property = "employeeCode", column = "employee_code"),
             @Result(property = "hireDate", column = "hire_date"),
             @Result(property = "userId", column = "user_id"),
-            @Result(property = "createdAt", column = "created_at"),
-            @Result(property = "updatedAt", column = "updated_at")
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM teachers WHERE teacher_id = #{id}")
     Teacher findById(@Param("id") Long id);
@@ -33,7 +34,9 @@ public interface TeacherRepository {
             @Result(property = "teacherId", column = "teacher_id"),
             @Result(property = "employeeCode", column = "employee_code"),
             @Result(property = "hireDate", column = "hire_date"),
-            @Result(property = "userId", column = "user_id")
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM teachers WHERE employee_code = #{employeeCode}")
     Teacher findByEmployeeCode(@Param("employeeCode") String employeeCode);
@@ -42,7 +45,9 @@ public interface TeacherRepository {
             @Result(property = "teacherId", column = "teacher_id"),
             @Result(property = "employeeCode", column = "employee_code"),
             @Result(property = "hireDate", column = "hire_date"),
-            @Result(property = "userId", column = "user_id")
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM teachers WHERE user_id = #{userId}")
     Teacher findByUserId(@Param("userId") Long userId);
@@ -51,7 +56,9 @@ public interface TeacherRepository {
             @Result(property = "teacherId", column = "teacher_id"),
             @Result(property = "employeeCode", column = "employee_code"),
             @Result(property = "hireDate", column = "hire_date"),
-            @Result(property = "userId", column = "user_id")
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "createdAt", column = "created_at", typeHandler = LocalDateTimeTypeHandler.class),
+            @Result(property = "updatedAt", column = "updated_at", typeHandler = LocalDateTimeTypeHandler.class)
     })
     @Select("SELECT * FROM teachers WHERE status = #{status}")
     List<Teacher> findByStatus(@Param("status") String status);

@@ -30,7 +30,7 @@ public class AppUserProfileController {
     private final AppUserProfileService appUserProfileService;
     private final AppUserRepository appUserRepository; // Add this dependency
 
-    // ✅ Check if user has any of the specified roles
+    //  Check if user has any of the specified roles
     private boolean hasAnyRole(String... roles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) return false;
@@ -44,7 +44,7 @@ public class AppUserProfileController {
         return hasAnyRole(role);
     }
 
-    // ✅ CORRECT implementation using your AppUserRepository
+    //  CORRECT implementation using your AppUserRepository
     private Long getCurrentUserId() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -65,7 +65,7 @@ public class AppUserProfileController {
         return null;
     }
 
-    // ✅ 1. GET ALL PROFILES - Role-based access
+    // 1. GET ALL PROFILES - Role-based access
     @Operation(summary = "Get all user profiles", description = "ADMIN(all), TEACHER(teachers+students), STUDENT(own only)")
     @GetMapping
     public ResponseEntity<ApiResponse<List<AppUserProfile>>> getAllUserProfiles() {
@@ -127,7 +127,7 @@ public class AppUserProfileController {
                 .build());
     }
 
-    // ✅ 2. GET PROFILE BY ID - Role-based access
+    // 2. GET PROFILE BY ID - Role-based access
     @Operation(summary = "Get user profile by ID", description = "ADMIN(any), TEACHER(teachers+students), STUDENT(own only)")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<AppUserProfile>> getUserProfileById(@PathVariable Long id) {
@@ -177,7 +177,7 @@ public class AppUserProfileController {
                 .build());
     }
 
-    // ✅ 3. GET PROFILE BY USER ID - Role-based access
+    //  3. GET PROFILE BY USER ID - Role-based access
     @Operation(summary = "Get user profile by user ID", description = "ADMIN(any), TEACHER(teachers+students), STUDENT(own only)")
     @GetMapping("/user/{userId}")
     public ResponseEntity<ApiResponse<AppUserProfile>> getUserProfileByUserId(@PathVariable Long userId) {
@@ -227,7 +227,7 @@ public class AppUserProfileController {
                 .build());
     }
 
-    // ✅ 4. GET MY PROFILE - All roles can access their own profile
+    //  4. GET MY PROFILE - All roles can access their own profile
     @Operation(summary = "Get my profile", description = "Get current user's own profile (all roles)")
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<AppUserProfile>> getMyProfile() {
@@ -271,7 +271,7 @@ public class AppUserProfileController {
         }
     }
 
-    // ✅ 5. CREATE PROFILE - Role-based access
+    //  5. CREATE PROFILE - Role-based access
     @Operation(summary = "Create a new user profile", description = "ADMIN(any), TEACHER(own only), STUDENT(own only)")
     @PostMapping
     public ResponseEntity<ApiResponse<AppUserProfile>> createUserProfile(@RequestBody AppUserProfile appUserProfile) {
@@ -311,7 +311,7 @@ public class AppUserProfileController {
                 .build());
     }
 
-    // ✅ 6. UPDATE PROFILE - Role-based access
+    //  6. UPDATE PROFILE - Role-based access
     @Operation(summary = "Update user profile by ID", description = "ADMIN(any), TEACHER(own only), STUDENT(own only)")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<AppUserProfile>> updateUserProfile(
@@ -353,7 +353,7 @@ public class AppUserProfileController {
                 .build());
     }
 
-    // ✅ 7. DELETE PROFILE - Admin only
+    // 7. DELETE PROFILE - Admin only
     @Operation(summary = "Delete user profile by ID", description = "Delete user profile by ID (Admin only)")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteUserProfile(@PathVariable Long id) {

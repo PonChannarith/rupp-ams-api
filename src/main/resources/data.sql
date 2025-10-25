@@ -23,6 +23,5 @@ VALUES
 -- Insert sample teachers
 INSERT INTO teachers (employee_code, hire_date, status, user_id)
 VALUES
-    ('EMP001', '2020-01-15', 'active', 9),
-    ('EMP002', '2019-03-20', 'active', 10),
-    ('EMP003', '2021-06-10', 'active', 11);
+    ('Teacher Reaksmey', '2020-01-15', 'active', 7),
+    ('Teacher Samnang', '2021-06-10', 'active', 11);

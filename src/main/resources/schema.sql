@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS app_roles CASCADE;
 DROP TABLE IF EXISTS app_users CASCADE;
 DROP TABLE IF EXISTS roles CASCADE ;
 DROP TABLE IF EXISTS app_user_profile CASCADE ;
+DROP TABLE IF EXISTS teachers CASCADE ;
 CREATE TABLE app_users (
                            user_id   serial PRIMARY KEY NOT NULL,
                            full_name VARCHAR(50) NOT NULL,
